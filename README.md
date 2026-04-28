@@ -134,7 +134,3 @@ A `dockerfile` placeholder exists, but it is currently empty. The application is
 - If `/build-index` fails, confirm `data/human-nutrition-text.pdf` exists.
 - If models fail to load, verify the Python environment and installed packages.
 - Use `uvicorn app.main:app` from the project root so imports resolve correctly.
-
-## License
-
-Add your license information here if needed.
