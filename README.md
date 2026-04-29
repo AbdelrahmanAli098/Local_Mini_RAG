@@ -120,7 +120,35 @@ Checks app health and loaded model/index status.
 
 ## Docker
 
-A `dockerfile` placeholder exists, but it is currently empty. The application is dockerizable, and a Dockerfile can be added to build a container image.
+This project can be run via Docker (handy if you don’t want to set up Python locally).
+
+### Build
+
+From the repo root:
+
+```powershell
+docker build -f dockerfile -t local-mini-rag .
+```
+
+### Run
+
+Start the API and expose it on `http://127.0.0.1:8000`:
+
+```powershell
+docker run --rm -p 8000:8000 local-mini-rag
+```
+
+Open the Swagger UI at `http://127.0.0.1:8000/docs`.
+
+### Use local `data/` (recommended)
+
+To let the container read `data/human-nutrition-text.pdf` and write `data/text_chunk_embeddings.csv` back to your machine, mount the `data/` folder:
+
+```powershell
+docker run --rm -p 8000:8000 -v "${PWD}\data:/code/data" local-mini-rag
+```
+
+Then use `data/human-nutrition-text.pdf` as the `pdf_path` when calling `POST /build-index`.
 
 ## Recommended Workflow
 
