@@ -8,7 +8,7 @@ import torch
 from sentence_transformers import SentenceTransformer, util
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 
-from utils import (
+from .utils import (
     extract_text_from_pdf,
     init_spacy,
     normalize_text_chunks,
@@ -24,7 +24,8 @@ def build_text_chunks(
     pdf_path: str,
     chunk_size: int = 10,
     min_token_count: int = 30,
-    nlp: Optional[Any] = None,) -> List[Dict[str, Any]]:
+    nlp: Optional[Any] = None,
+) -> List[Dict[str, Any]]:
     if nlp is None:
         nlp = init_spacy()
 

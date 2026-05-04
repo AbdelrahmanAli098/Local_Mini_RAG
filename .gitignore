@@ -3,7 +3,7 @@ local-rag/*
 venv/*
 .png*
 .json*
-
+.git/
 .ipynb_checkpoints/* 
-
+__pycache__/*
 text_chunks_and_embeddings_df.csv

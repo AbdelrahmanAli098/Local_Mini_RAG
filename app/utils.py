@@ -1,6 +1,6 @@
 import fitz
 import re
-from typing import List
+from typing import List, Union
 from spacy.lang.en import English
 
 def text_formatter(text: str) -> str:
@@ -18,18 +18,21 @@ def split_into_sentences(text: str, nlp: English) -> List[str]:
     sentences = [sent.text.strip() for sent in doc.sents]
     return sentences
 
-def split_into_chunks(sentences: List[str], chunk_size: int =10) -> list[list[str]]:
-    chunks = []
+
+SentencesOrChunk = Union[List[str], str]
+
+def split_into_chunks(sentences: List[str], chunk_size: int = 10) -> List[List[str]]:
+    chunks: List[List[str]] = []
     if chunk_size < 1:
         raise ValueError("slice_size must be >= 1")
     # Loop through the sentences in steps of chunk_size and create chunks
     for i in range(0, len(sentences), chunk_size):
-        chunk = " ".join(sentences[i:i + chunk_size])
-        chunks.append(chunk)
+        chunks.append(sentences[i : i + chunk_size])
     return chunks
 
-def normalize_text_chunks(sentence_chunk: List[str]) -> List[str]:
-    chunk_text = " ".join(sentence_chunk)
+def normalize_text_chunks(sentence_chunk: SentencesOrChunk) -> str:
+    # Accept either a list of sentences or an already-joined chunk string.
+    chunk_text = sentence_chunk if isinstance(sentence_chunk, str) else " ".join(sentence_chunk)
     # Remove extra spaces and newlines from the chunk text
     chunk_text = re.sub(r'\s+', ' ', chunk_text).strip()
     # Add a space after periods followed by uppercase letters to ensure proper sentence separation 
@@ -37,7 +40,7 @@ def normalize_text_chunks(sentence_chunk: List[str]) -> List[str]:
 
     return chunk_text
 
-def extract_text_from_pdf(pdf_path: str) -> str:
+def extract_text_from_pdf(pdf_path: str, page_number_offset: int = 1) -> List[dict]:
 
     doc = fitz.open(pdf_path)
     pages = []
@@ -47,7 +50,7 @@ def extract_text_from_pdf(pdf_path: str) -> str:
         cleaned_text = text_formatter(raw_text)
         pages.append(
             {
-                "page_number": page_number + 41,
+                "page_number": page_number + page_number_offset,
                 "text": cleaned_text,
                 "page_char_count": len(cleaned_text),
                 "page_word_count": len(cleaned_text.split())
